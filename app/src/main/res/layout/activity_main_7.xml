@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +8,7 @@
     android:background="@drawable/tc"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,11 +22,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-    </android.support.v7.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/seat_avaibility"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="240dp"
@@ -36,7 +37,7 @@
         android:text="Seat Avail"
         android:textColor="#000"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/live_train"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +46,7 @@
 
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/pnr_status"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="240dp"
@@ -62,11 +63,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/train_fare" />
 
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/live_train"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="240dp"
@@ -78,15 +79,15 @@
         android:text="Live Train"
         android:textColor="#000"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toTopOf="@+id/train_fare"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/seat_avaibility" />
 
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/train_fare"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="240dp"
@@ -98,11 +99,11 @@
         android:text="Train Fare"
         android:textColor="#000"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintBottom_toTopOf="@+id/pnr_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/live_train" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
