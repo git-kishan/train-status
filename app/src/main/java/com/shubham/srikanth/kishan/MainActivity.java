@@ -1,33 +1,54 @@
 package com.shubham.srikanth.kishan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.shubham.srikanth.kishan.FragmentPackage.LiveTrainFragment;
-import com.shubham.srikanth.kishan.FragmentPackage.PnrStatusFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.shubham.srikanth.kishan.Adapter.SearchAdapter;
+import com.shubham.srikanth.kishan.Database.TrainCode;
+import com.shubham.srikanth.kishan.FragmentPackage.PnrStatusBottomFragment;
+import com.shubham.srikanth.kishan.FragmentPackage.TrainFareFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private TextInputEditText trainNoEditText;
     private FrameLayout fragmentContainer;
     private TextView pnrStatusText,liveTrainText,trainFareText,seatAvailibilityText;
     private ConstraintLayout rootLayout;
-    private CardView toolbarCardView;
+    private CardView bottomSheetTitle;
+    private Toolbar toolbar;
     private TextView toolbarTitle;
+    private TextView dateTextView;
     private NestedScrollView nestedScrollView;
     private BottomSheetBehavior  bottomSheet;
+    private MaterialButton todayButton,tomorrowButton,twoDayAgoButton,threeDayAgoButton,liveStatusButton;
+    private RecyclerView liveTrainRecyclerView;
+    private LinearLayoutManager liveTrainLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,42 +56,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initilization();
         attachListener();
-        bottomSheet= BottomSheetBehavior.from(nestedScrollView);
-        bottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        setBottomSheetCallbackForLiveTrain();
+
+
 
     }
 
-    private void loadFragment(Fragment fragment,String title){
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.slide_up,
-                        R.animator.slide_down,
-                        R.animator.slide_up,R.animator.slide_down)
-                .add(R.id.frame_layout, fragment).addToBackStack(null).commit();
-        toolbarTitle.setText(title);
-        syncToolbarTitle();
-        flipToolbarTitle(title);
 
-    }
     private void attachListener(){
         pnrStatusText.setOnClickListener(this);
         liveTrainText.setOnClickListener(this);
         trainFareText.setOnClickListener(this);
         seatAvailibilityText.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        Fragment fragment;
-        switch (view.getId()){
-            case R.id.pnr_status:
-                fragment=new PnrStatusFragment();
-                loadFragment(fragment,"PNR Status" );
-                break;
-            case R.id.live_train:
-               bottomSheet.setPeekHeight(700);
-               bottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                break;
-        }
+        todayButton.setOnClickListener(this);
+        tomorrowButton.setOnClickListener(this);
+        twoDayAgoButton.setOnClickListener(this);
+        threeDayAgoButton.setOnClickListener(this);
+        liveStatusButton.setOnClickListener(this);
     }
     private void initilization(){
         pnrStatusText=findViewById(R.id.pnr_status);
@@ -80,16 +82,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentContainer=findViewById(R.id.frame_layout);
         rootLayout=findViewById(R.id.root_layout);
         rootLayout.setVisibility(View.VISIBLE);
-        toolbarCardView=findViewById(R.id.toolbar_cardview);
-        toolbarTitle=toolbarCardView.findViewById(R.id.title);
+        toolbar=findViewById(R.id.toolbar);
+        toolbarTitle=toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Train Status");
         nestedScrollView=findViewById(R.id.bottom_sheet);
+        todayButton=findViewById(R.id.today_button);
+        tomorrowButton=findViewById(R.id.tomorrow_button);
+        twoDayAgoButton=findViewById(R.id.twoday_ago_button);
+        threeDayAgoButton=findViewById(R.id.threeday_ago_button);
+        dateTextView=findViewById(R.id.date_text);
+        bottomSheetTitle=findViewById(R.id.bottom_sheet_topview);
+        liveStatusButton=findViewById(R.id.train_button);
+        trainNoEditText=findViewById(R.id.train_no_edit_text);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.pnr_status:
+                PnrStatusBottomFragment pnrStatusBottomFragment=new PnrStatusBottomFragment();
+                pnrStatusBottomFragment.show(getSupportFragmentManager(),pnrStatusBottomFragment.getTag());
+                break;
+            case R.id.live_train:
+               bottomSheet.setPeekHeight(950);
+               bottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
+               rootLayout.setAlpha(0.5f);
+               rootLayout.setClickable(false);
+                break;
+            case R.id.train_fare:
+               startActivity(new Intent(this,TrainFareActivity.class));
+                break;
+            case R.id.seat_avaibility:
+                Toast.makeText(this,"seat availibility is clicked" ,Toast.LENGTH_SHORT ).show();
+            case R.id.today_button:
+                showSnackbar("Today ");
+                break;
+            case R.id.tomorrow_button:
+                showSnackbar("tommorow ");
+                break;
+            case R.id.twoday_ago_button:
+                showSnackbar("two day ago ");
+                break;
+            case R.id.threeday_ago_button:
+                showSnackbar("three day ago ");
+                break;
+            case R.id.train_button:
+                showSnackbar("Live Train status ");
+                break;
+
+
+        }
     }
 
     @Override
     public void onBackPressed() {
         syncToolbarTitle();
         rootLayout.setVisibility(View.VISIBLE);
+
+        if(bottomSheet.getState()==BottomSheetBehavior.STATE_EXPANDED||
+        bottomSheet.getState()==BottomSheetBehavior.STATE_SETTLING||
+        bottomSheet.getState()==BottomSheetBehavior.STATE_COLLAPSED){
+
+            bottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+            rootLayout.setAlpha(1f);
+            rootLayout.setClickable(true);
+            return;
+        }
         super.onBackPressed();
     }
 
@@ -99,10 +158,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void flipToolbarTitle(String title){
-        ObjectAnimator flip = ObjectAnimator.ofFloat(toolbarTitle, "rotationY", 0f, 360f);
+    private void flipToolbarTitle(final String title){
+        ObjectAnimator flip = ObjectAnimator.ofFloat(toolbarTitle, "rotationX", 0f, 360f);
         flip.setDuration(700);
         flip.start();
-        toolbarTitle.setText(title);
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toolbarTitle.setText(title);
+
+            }
+        }, 300);
     }
+
+
+    private void setBottomSheetCallbackForLiveTrain(){
+        bottomSheet= BottomSheetBehavior.from(nestedScrollView);
+        bottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheet.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState!= BottomSheetBehavior.STATE_HIDDEN){
+                    liveTrainText.setEnabled(false);
+                    seatAvailibilityText.setEnabled(false);
+                    trainFareText.setEnabled(false);
+                    pnrStatusText.setEnabled(false);
+                }
+                if(newState==BottomSheetBehavior.STATE_HIDDEN){
+                    liveTrainText.setEnabled(true);
+                    seatAvailibilityText.setEnabled(true);
+                    trainFareText.setEnabled(true);
+                    pnrStatusText.setEnabled(true);
+                }
+                if(newState==BottomSheetBehavior.STATE_EXPANDED){
+                    flipToolbarTitle("Live Train Status");
+                }
+                if(newState==BottomSheetBehavior.STATE_HALF_EXPANDED||
+                newState==BottomSheetBehavior.STATE_SETTLING){
+                    flipToolbarTitle("Train Status");
+                }
+                if(newState==BottomSheetBehavior.STATE_HIDDEN){
+                    rootLayout.setAlpha(1f);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+    }
+
+    private void showSnackbar(String message){
+        Snackbar.make(rootLayout,message+" is clicked" ,Snackbar.LENGTH_SHORT ).setAction("undo", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        }).show();
+    }
+
+
 }

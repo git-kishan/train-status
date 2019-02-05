@@ -7,129 +7,141 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/toolbar_cardview"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:elevation="3dp"
+            android:background="#ffffff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="210dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="left|center"
+                    android:textSize="20sp"
+                    android:textColor="#000"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Toolbar title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root_layout"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="@drawable/tc"
+            tools:context=".MainActivity">
 
             <TextView
-                android:id="@+id/title"
-                android:layout_width="210dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="left|center"
-                android:textSize="20sp"
+                android:id="@+id/seat_avaibility"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="160dp"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="Seat Avail"
                 android:textColor="#000"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Toolbar title"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/live_train"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_chainStyle="packed" />
+
+
+            <TextView
+                android:id="@+id/pnr_status"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="160dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="PNR Status"
+                android:textColor="#000"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/train_fare" />
+
+
+            <TextView
+                android:id="@+id/live_train"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="160dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="Live Train"
+                android:textColor="#000"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/train_fare"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/seat_avaibility" />
+
+
+            <TextView
+                android:id="@+id/train_fare"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="160dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="Train Fare"
+                android:textColor="#000"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/pnr_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/live_train" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/root_layout"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/tc"
-        tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/seat_avaibility"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="160dp"
-            android:layout_marginEnd="48dp"
-            android:background="@drawable/ripple"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="Seat Avail"
-            android:textColor="#000"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/live_train"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-
-        <TextView
-            android:id="@+id/pnr_status"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="48dp"
-            android:background="@drawable/ripple"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="PNR Status"
-            android:textColor="#000"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/train_fare" />
-
-
-        <TextView
-            android:id="@+id/live_train"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="48dp"
-            android:background="@drawable/ripple"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="Live Train"
-            android:textColor="#000"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/train_fare"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seat_avaibility" />
-
-
-        <TextView
-            android:id="@+id/train_fare"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="48dp"
-            android:background="@drawable/ripple"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="Train Fare"
-            android:textColor="#000"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/pnr_status"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/live_train" />
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
     <FrameLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
@@ -138,7 +150,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-    <include
-        layout="@layout/live_train_bottom_sheet"/>
+
+        <include layout="@layout/live_train_bottom_sheet"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -6,10 +6,31 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="android:windowLightStatusBar">true</item>
+
     </style>
     <style name="textInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">#000</item>
+        <item name="boxStrokeColor">#6C1059</item>
         <item name="boxStrokeWidth">1dp</item>
+
     </style>
 
+    <style name="materiaButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="boxStrokeColor">#000</item>
+        <item name="boxStrokeWidth">1dp</item>
+
+    </style>
+
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_dialog_round
+        </item>
+    </style>
 </resources>
