@@ -92,24 +92,28 @@ public class PnrStatusBottomFragment extends BottomSheetDialogFragment implement
                 if (resultCode == RESULT_OK && data != null) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String mdata=result.get(0);
+                    StringBuilder builder = new StringBuilder();
                     char [] mmdata=mdata.toCharArray();
                     boolean valid=true;
                     int count=0;
                     for (int i=0;i<mdata.length();i++){
-                        if(!Character.isDigit(mmdata[i])){
+                        if(!Character.isDigit(mmdata[i])&&mmdata[i]!=' '){
                             valid=false;
                             break;
                         }
+                        if(mmdata[i]==' '){
+                            continue;
+                        }builder.append(mmdata[i]);
                         count++;
                     }
                     if(!valid){
-                        Toast.makeText(getActivity(),"Please speak train no." , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please speak pnr no." , Toast.LENGTH_SHORT).show();
                         return;
-                    } else if(count!=5) {
-                        Toast.makeText(getActivity(),"Check your train no." , Toast.LENGTH_SHORT).show();
+                    } else if(count!=4) {
+                        Toast.makeText(getActivity(),"Check your pnr no." , Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    pnrEditText.setText(result.get(0));
+                    pnrEditText.setText(builder.toString());
                 }
                 break;
         }

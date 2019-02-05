@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search_view_root_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,37 +8,106 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/bottom_sheet_behavior"
     app:behavior_peekHeight="0dp"
-    android:layout_marginTop="24dp"
     android:background="#ffffff"
     app:behavior_hideable="true">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:weightSum="10"
+        android:background="#FDFFFF"
         android:layout_height="?attr/actionBarSize">
         <ImageView
             android:id="@+id/back_button"
             android:layout_width="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_back"/>
         <EditText
             android:id="@+id/data_taker"
             android:layout_width="0dp"
-            android:layout_weight="7"
+            android:layout_weight="7.5"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_height="match_parent"
             android:hint="Search here..."
-            android:layout_marginLeft="20dp"
-            android:background="@android:color/transparent"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:layout_marginStart="10dp"
+            android:background="#E9F6F6"
+            />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:padding="14dp"
+            android:src="@drawable/google_mic"
+            android:scaleType="centerInside"
+            android:layout_height="match_parent"
+
             />
 
     </LinearLayout>
+    <FrameLayout
+        android:layout_marginTop="30dp"
+        android:id="@+id/recent_search_framelayout"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:text="Recent Searches"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/clear"
+                    android:layout_width="44dp"
+                    android:layout_height="22dp"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:focusable="true"
+                    android:text="clear"
+                    android:textSize="14sp"
+                    android:background="?android:selectableItemBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recent_search_recycler_view"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </FrameLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/train_fare_recycler_view"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
