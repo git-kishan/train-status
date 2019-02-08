@@ -68,6 +68,6 @@ public class DataModel {
     }
 
     public void setToStationName(String toStationName) {
-
+        this.toStationName=toStationName;
     }
 }

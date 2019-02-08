@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.print.PrinterId;
 import android.text.StaticLayout;
+import android.util.Log;
 
 import com.shubham.srikanth.kishan.DataModel;
 
@@ -17,7 +18,7 @@ import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME="DATABASE_NAME";
-    private static final int DATABASE_VERSION=5;
+    private static final int DATABASE_VERSION=6;
     private static final String _ID="_id";
     private static final String FROM_STATION_CODE="from_station_code";
     private static final String FROM_STATION_NAME="from_station_name";
@@ -67,10 +68,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String fromStationName=rowCursor.getString(2);
                 String toStationCode=rowCursor.getString(3);
                 String toStationName=rowCursor.getString(4);
+
                 dataModel.setFromStationCode(fromStationCode);
                 dataModel.setFromStationName(fromStationName);
                 dataModel.setToStationCode(toStationCode);
                 dataModel.setToStationName(toStationName);
+
                 list.add(dataModel);
             }while (rowCursor.moveToNext());
         }
@@ -79,6 +82,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     public void deleteRecentSearches(){
         SQLiteDatabase sqLiteDatabase=this.getWritableDatabase();
-        sqLiteDatabase.execSQL("drop table "+RECENT_SEARCH+";");
+        sqLiteDatabase.execSQL("delete from "+RECENT_SEARCH+";");
     }
 }

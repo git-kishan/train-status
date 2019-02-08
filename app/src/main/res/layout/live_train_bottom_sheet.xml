@@ -152,6 +152,7 @@
                     app:hintAnimationEnabled="true"
                     app:hintEnabled="true"
                     app:hintTextColor="#6C1059"
+                    android:focusableInTouchMode="true"
                     app:hintTextAppearance="?android:textAppearanceMedium"
                     app:layout_constraintBottom_toTopOf="@+id/pnr_button"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -163,6 +164,8 @@
                         android:maxLines="1"
                         android:maxLength="5"
                         android:inputType="number"
+                        android:focusableInTouchMode="true"
+                        android:focusable="true"
                         android:imeOptions="actionDone"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -176,6 +179,8 @@
                     android:layout_marginTop="8dp"
                     android:text="Select date"
                     android:textSize="20sp"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/train_no_layout" />
 

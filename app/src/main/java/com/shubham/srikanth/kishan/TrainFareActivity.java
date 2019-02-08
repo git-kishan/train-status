@@ -2,27 +2,23 @@ package com.shubham.srikanth.kishan;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.ShowableListMenu;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.view.animation.RotateAnimation;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -35,24 +31,27 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.shubham.srikanth.kishan.Adapter.RecentSearchAdapter;
 import com.shubham.srikanth.kishan.Adapter.SearchAdapter;
 import com.shubham.srikanth.kishan.Database.DatabaseHelper;
 import com.shubham.srikanth.kishan.Database.TrainCode;
+//import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
+//import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
+import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
 import com.shubham.srikanth.kishan.Interface.SearchItemClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class TrainFareActivity extends AppCompatActivity implements View.OnClickListener,TextWatcher, SearchItemClickListener {
 
     private CoordinatorLayout coordinatorLayout;
-    ArrayList<DataModel> newList;
+    private  ArrayList<DataModel> newList;
     private SearchAdapter adapter;
     private RecyclerView trainFareRecyclerView;
-    private LinearLayoutManager trainFareLinearLayoutManager;
+    private LinearLayoutManager trainFareLinearLayoutManager,recentSearchLinearLayoutManager;
     private BottomSheetBehavior bottomSheetTrainFare;
     private LinearLayout rootLinearLayout;
     private Toolbar toolbar;
@@ -66,20 +65,29 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
     private MaterialButton button;
     private ConstraintLayout datePicker;
     private static String top,bottom;
-    private  String fromOnTop="true";
-    private String sourceStationOnTop="true";
+    private  String fromOnTop="true";// fromOnTop is used to show wheather from is on top side or on botoom side
     private FrameLayout recentSearchFrameLayout;
     private RecyclerView recentSearchRecyclerView;
     private TextView clear;
+    private RecentSearchAdapter recentSearchAdapter;
+    private ArrayList<DataModel> recentSearchList;
+    private TextView recentSearchText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_fare);
+//        Slide enterTransition=new Slide();
+//        enterTransition.setSlideEdge(Gravity.LEFT);
+//        enterTransition.setDuration(0);
+//        enterTransition.setStartDelay(30);
+//        getWindow().setExitTransition(enterTransition);
         initilization();
         attachListener();
         originalList=trainCode.returnList();
         setBottomSheetCallbackForTrainFare();
         setTrainFareRecyclerView();
+        setRecentSearchRecyclerView();
+
 
 
 
@@ -88,6 +96,10 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
 
     private void initilization(){
         toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         backImage=findViewById(R.id.back_button);
         searchEditText=findViewById(R.id.data_taker);
         rootLinearLayout=findViewById(R.id.search_view_root_layout);
@@ -110,25 +122,42 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         coordinatorLayout=findViewById(R.id.coordinator);
         recentSearchFrameLayout=findViewById(R.id.recent_search_framelayout);
         recentSearchRecyclerView=findViewById(R.id.recent_search_recycler_view);
+        recentSearchLinearLayoutManager=new LinearLayoutManager(this);
         clear=findViewById(R.id.clear);
+        recentSearchText=findViewById(R.id.recent_search_text);
+        recentSearchText.requestFocus();
     }
 
     private void openSearchView() {
-
         bottomSheetTrainFare.setPeekHeight(3000);
         bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_EXPANDED);
-        trainFareRecyclerView.setAdapter(adapter);
         toolbar.animate().translationY(-toolbar.getHeight()).start();
+        recentSearchFrameLayout.setVisibility(View.VISIBLE);
+        trainFareRecyclerView.setVisibility(View.GONE);
     }
 
     private void setTrainFareRecyclerView(){
 
         adapter=new SearchAdapter(this,originalList);
         trainFareRecyclerView.setLayoutManager(trainFareLinearLayoutManager);
-        trainFareRecyclerView.setItemAnimator(new DefaultItemAnimator());
         trainFareRecyclerView.setHasFixedSize(true);
         trainFareRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         trainFareRecyclerView.setAdapter(adapter);
+
+
+
+
+    }
+    private void setRecentSearchRecyclerView(){
+        recentSearchRecyclerView.setLayoutManager(recentSearchLinearLayoutManager);
+        recentSearchRecyclerView.setHasFixedSize(true);
+        DatabaseHelper helper=new DatabaseHelper(this);
+        recentSearchList=helper.returnDataFromRecentSearches();
+        recentSearchFrameLayout.setVisibility(View.VISIBLE);
+        trainFareRecyclerView.setVisibility(View.GONE);
+        recentSearchAdapter=new RecentSearchAdapter(this,recentSearchList);
+        recentSearchRecyclerView.setAdapter(recentSearchAdapter);
+
     }
     private void setBottomSheetCallbackForTrainFare(){
         bottomSheetTrainFare= BottomSheetBehavior.from(rootLinearLayout);
@@ -141,6 +170,11 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
                     toolbar.animate().translationY(0f).start();
                     searchEditText.setText("");
 
+                } if(newState != BottomSheetBehavior.STATE_HIDDEN){
+                    searchEditText.setText("");
+                    recentSearchText.requestFocus();
+                    setRecentSearchRecyclerView();
+
                 }
 
             }
@@ -152,6 +186,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         });
 
     }
+
 
     private void attachListener(){
         backImage.setOnClickListener(this);
@@ -166,6 +201,8 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         toCode.setOnClickListener(this);
         flipImage.setOnClickListener(this);
         clear.setOnClickListener(this);
+        EditTextFocusChangeListener focusChangeListener=new EditTextFocusChangeListener(this);
+        searchEditText.setOnFocusChangeListener(focusChangeListener);
 
     }
 
@@ -183,7 +220,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         }else if(view.getId()==R.id.destination_station){
            bottom="true";top="false";
            openSearchView();
-       }
+        }
        else if(view.getId()==R.id.date_picker){
            showDatePicker();
        }
@@ -203,6 +240,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
        }
        else if(view.getId()==R.id.clear){
 
+           deleteRecentSearch();
        }
 
 
@@ -225,14 +263,18 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+
     }
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
         recentSearchFrameLayout.setVisibility(View.GONE);
-        recentSearchRecyclerView.setVisibility(View.GONE);
         trainFareRecyclerView.setVisibility(View.VISIBLE);
+//        if(searchEditText.getText().toString().trim().length()==0){
+//            recentSearchFrameLayout.setVisibility(View.VISIBLE);
+//            recentSearchRecyclerView.setVisibility(View.VISIBLE);
+//            trainFareRecyclerView.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -249,7 +291,9 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
             }
 
         }
+
         adapter.updateList(newList);
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -265,28 +309,18 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
           from.setVisibility(View.VISIBLE);
           fromCode.setVisibility(View.VISIBLE);
           sourceStation.setVisibility(View.INVISIBLE);
-          if(isNewList()) {
-              from.setText(newList.get(position).getStationName());
-              fromCode.setText(newList.get(position).getStationCode());
-          }
-          else {
-              from.setText(originalList.get(position).getStationName());
-              fromCode.setText(originalList.get(position).getStationCode());
-          }
+          from.setText(newList.get(position).getStationName());
+          fromCode.setText(newList.get(position).getStationCode());
+
 
       }else if(clickedByTopOrBottom().equals("bottom")){
           bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
           to.setVisibility(View.VISIBLE);
           toCode.setVisibility(View.VISIBLE);
           destinationStation.setVisibility(View.INVISIBLE);
-          if(isNewList()) {
-              to.setText(newList.get(position).getStationName());
-              toCode.setText(newList.get(position).getStationCode());
-          }
-          else {
-              to.setText(originalList.get(position).getStationName());
-              toCode.setText(originalList.get(position).getStationCode());
-          }
+          to.setText(newList.get(position).getStationName());
+          toCode.setText(newList.get(position).getStationCode());
+
 
       }
       else if(clickedByTopOrBottom().equals("null")){
@@ -298,7 +332,14 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
     private boolean isNewList(){
         if(searchEditText.getText().toString().trim().length()==0)
         return false;
-        else return true;
+        else
+            return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private String clickedByTopOrBottom(){
@@ -369,20 +410,6 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         rotate.setDuration(400);
         rotate.setRepeatCount(Animation.ABSOLUTE);
         flipImage.startAnimation(rotate);
-//
-//        if(from.getText().equals("null")&&fromCode.getText().equals("null")&&to.getText().equals("null")&&toCode.getText().equals("null")){
-//            if(sourceStationOnTop.equals("true")) {
-//                sourceStation.animate().translationY(180f).start();
-//                destinationStation.animate().translationY(-180f).start();
-//                sourceStationOnTop = "false";
-//                return;
-//            }else if(sourceStationOnTop.equals("false")){
-//                sourceStation.animate().translationY(0f).start();
-//                destinationStation.animate().translationY(0f).start();
-//                sourceStationOnTop = "true";
-//                return;
-//            }
-//        }
         if((from.getText().equals("null")&&fromCode.getText().equals("null"))||(to.getText().equals("null")&&toCode.getText().equals("null"))){
             return;
         }
@@ -414,30 +441,37 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
     }
     private void putSearchInDatabase(){
         DatabaseHelper helper=new DatabaseHelper(this);
-        helper.addDataToRecentSearch(new DataModel(
-                fromCode.getText().toString(),
-                from.getText().toString(),
-                toCode.getText().toString(),
-                to.getText().toString()
-        ));
-
-        showToast("data saved in database");
-        ArrayList<DataModel> m=helper.returnDataFromRecentSearches();
-        for(int i=0;i<m.size();i++){
-            Log.i("TAG","station code :- "+m.get(i).getFromStationCode());
-            Log.i("TAG","station name :- "+m.get(i).getFromStationName());
-            Log.i("TAG","station name :- "+m.get(i).getToStationName());
-            Log.i("TAG","station code :- "+m.get(i).getToStationCode());
-
+        if(fromOnTop.equals("true")) {
+            helper.addDataToRecentSearch(new DataModel(
+                    fromCode.getText().toString(),
+                    from.getText().toString(),
+                    toCode.getText().toString(),
+                    to.getText().toString()
+            ));
+        }else if(fromOnTop.equals("false")){
+            helper.addDataToRecentSearch(new DataModel(
+                    toCode.getText().toString(),
+                    to.getText().toString(),
+                    fromCode.getText().toString(),
+                    from.getText().toString()
+            ));
         }
+
 
     }
     private void deleteRecentSearch(){
+
         DatabaseHelper helper = new DatabaseHelper(this);
         helper.deleteRecentSearches();
+        recentSearchList.clear();
+        recentSearchAdapter.notifyDataSetChanged();
+        int animId=R.anim.layout_animation_left_to_right;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, animId);
+        recentSearchRecyclerView.setLayoutAnimation(animation);
     }
 
 
 
 }
+
 

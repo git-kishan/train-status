@@ -4,45 +4,41 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.shubham.srikanth.kishan.Adapter.SearchAdapter;
-import com.shubham.srikanth.kishan.Database.TrainCode;
+import com.google.android.material.textfield.TextInputLayout;
 import com.shubham.srikanth.kishan.FragmentPackage.PnrStatusBottomFragment;
-import com.shubham.srikanth.kishan.FragmentPackage.TrainFareFragment;
+import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextInputEditText trainNoEditText;
+    private TextInputLayout textInputLayout;
     private FrameLayout fragmentContainer;
     private TextView pnrStatusText,liveTrainText,trainFareText,seatAvailibilityText;
     private ConstraintLayout rootLayout;
     private CardView bottomSheetTitle;
     private Toolbar toolbar;
-    private TextView toolbarTitle;
+    private TextView toolbarTitle,selectDate;
     private TextView dateTextView;
     private NestedScrollView nestedScrollView;
     private BottomSheetBehavior  bottomSheet;
@@ -73,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         twoDayAgoButton.setOnClickListener(this);
         threeDayAgoButton.setOnClickListener(this);
         liveStatusButton.setOnClickListener(this);
+        EditTextFocusChangeListener focusChangeListener=new EditTextFocusChangeListener(this);
+        trainNoEditText.setOnFocusChangeListener(focusChangeListener);
     }
     private void initilization(){
         pnrStatusText=findViewById(R.id.pnr_status);
@@ -94,6 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottomSheetTitle=findViewById(R.id.bottom_sheet_topview);
         liveStatusButton=findViewById(R.id.train_button);
         trainNoEditText=findViewById(R.id.train_no_edit_text);
+        textInputLayout=findViewById(R.id.train_no_layout);
+        selectDate=findViewById(R.id.textView);
+        EditTextFocusChangeListener focusChangeListener=new EditTextFocusChangeListener(this);
+        trainNoEditText.setOnFocusChangeListener(focusChangeListener);
+
 
     }
 
@@ -111,7 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                rootLayout.setClickable(false);
                 break;
             case R.id.train_fare:
-               startActivity(new Intent(this,TrainFareActivity.class));
+                Intent intent=new Intent(this,TrainFareActivity.class);
+                startActivity(intent);
+
                 break;
             case R.id.seat_avaibility:
                 Toast.makeText(this,"seat availibility is clicked" ,Toast.LENGTH_SHORT ).show();
@@ -190,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     seatAvailibilityText.setEnabled(true);
                     trainFareText.setEnabled(true);
                     pnrStatusText.setEnabled(true);
+                    selectDate.requestFocus();
                 }
                 if(newState==BottomSheetBehavior.STATE_EXPANDED){
                     flipToolbarTitle("Live Train Status");
@@ -200,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if(newState==BottomSheetBehavior.STATE_HIDDEN){
                     rootLayout.setAlpha(1f);
+                    selectDate.requestFocus();
                 }
             }
 

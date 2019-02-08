@@ -9,17 +9,21 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
 import com.shubham.srikanth.kishan.R;
 import java.util.ArrayList;
 import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
 import static android.app.Activity.RESULT_OK;
 
 
@@ -31,9 +35,11 @@ public class PnrStatusBottomFragment extends BottomSheetDialogFragment implement
     private MaterialButton pnrButton;
     private ImageView googleMic;
     private View rootView;
+    private TextView pnrStatusTextView;
 
     public PnrStatusBottomFragment() {
     }
+
 
 
     @Nullable
@@ -46,6 +52,10 @@ public class PnrStatusBottomFragment extends BottomSheetDialogFragment implement
         pnrButton = rootView.findViewById(R.id.pnr_button);
         googleMic = rootView.findViewById(R.id.google_mic);
         rootLayoutOfActivity = getActivity().findViewById(R.id.root_layout);
+        pnrStatusTextView=rootView.findViewById(R.id.pnr_text);
+        getDialog().setCanceledOnTouchOutside(false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         return rootView;
     }
     @Override
@@ -53,6 +63,8 @@ public class PnrStatusBottomFragment extends BottomSheetDialogFragment implement
         super.onActivityCreated(savedInstanceState);
         pnrButton.setOnClickListener(this);
         googleMic.setOnClickListener(this);
+
+        pnrStatusTextView.requestFocus();
     }
     @Override
     public void onClick(View view) {
@@ -118,4 +130,11 @@ public class PnrStatusBottomFragment extends BottomSheetDialogFragment implement
                 break;
         }
     }
+
+    @Override
+    public void onDetach() {
+        pnrStatusTextView.requestFocus();
+        super.onDetach();
+    }
+
 }

@@ -10,11 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TrainFareActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustNothing|stateHidden">
 
         </activity>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

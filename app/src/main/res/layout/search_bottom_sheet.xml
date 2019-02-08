@@ -39,7 +39,7 @@
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:layout_marginStart="10dp"
-            android:background="#E9F6F6"
+            android:background="#e8e8e8"
             />
         <ImageView
             android:layout_width="0dp"
@@ -52,6 +52,8 @@
             />
 
     </LinearLayout>
+
+
     <FrameLayout
         android:layout_marginTop="30dp"
         android:id="@+id/recent_search_framelayout"
@@ -67,11 +69,14 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/recent_search_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="22dp"
                     android:layout_marginStart="8dp"
-                    android:text="Recent Searches"
                     android:gravity="center"
+                    android:text="Recent Searches"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -103,6 +108,7 @@
         </androidx.recyclerview.widget.RecyclerView>
 
     </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/train_fare_recycler_view"
         android:clickable="true"
