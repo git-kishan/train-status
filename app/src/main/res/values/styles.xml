@@ -10,8 +10,9 @@
 
     </style>
     <style name="textInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">#6C1059</item>
+        <item name="boxStrokeColor">#788365</item>
         <item name="boxStrokeWidth">1dp</item>
+        <item name="android:colorAccent">#788365</item>
 
     </style>
 

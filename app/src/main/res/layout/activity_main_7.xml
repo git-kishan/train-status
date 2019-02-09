@@ -55,7 +55,6 @@
         android:background="@drawable/ripple"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="clicked"
         android:text="PNR Status"
         android:textColor="#000"
         android:textSize="20sp"

@@ -151,6 +151,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-        <include layout="@layout/live_train_bottom_sheet"/>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

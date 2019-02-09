@@ -226,6 +226,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
        }
        else if(view.getId()==R.id.button){
            onButtonClicked();
+           datePicker.setBackground(getResources().getDrawable(R.drawable.edit_no_dash));
 
        }
        else if(view.getId()==R.id.from|| view.getId()==R.id.from_code){
@@ -371,6 +372,10 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
                                 dayName.setText(dayOfWeek);
                                 monthName.setText(returnMonthName(monthOfYear));
                                 date.setText(dayOfMonth + "");
+                                dayName.setTextColor(getResources().getColor( android.R.color.black));
+                                monthName.setTextColor(getResources().getColor(android.R.color.black ));
+                                date.setTextColor(getResources().getColor(android.R.color.black ));
+                                datePicker.setBackground(getResources().getDrawable(R.drawable.edit_no_dash));
                             }else {
                                 Snackbar.make(coordinatorLayout, "please select from current year", Snackbar.LENGTH_INDEFINITE).setAction(
                                         "date", new View.OnClickListener() {
