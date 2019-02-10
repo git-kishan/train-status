@@ -8,13 +8,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Slide;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -28,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -35,11 +35,8 @@ import com.shubham.srikanth.kishan.Adapter.RecentSearchAdapter;
 import com.shubham.srikanth.kishan.Adapter.SearchAdapter;
 import com.shubham.srikanth.kishan.Database.DatabaseHelper;
 import com.shubham.srikanth.kishan.Database.TrainCode;
-//import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
-//import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
 import com.shubham.srikanth.kishan.Interface.EditTextFocusChangeListener;
 import com.shubham.srikanth.kishan.Interface.SearchItemClickListener;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,24 +45,24 @@ import java.util.Date;
 public class TrainFareActivity extends AppCompatActivity implements View.OnClickListener,TextWatcher, SearchItemClickListener {
 
     private CoordinatorLayout coordinatorLayout;
-    private  ArrayList<DataModel> newList;
+    private ArrayList<DataModel> newList,originalList;
     private SearchAdapter adapter;
     private RecyclerView trainFareRecyclerView;
     private LinearLayoutManager trainFareLinearLayoutManager,recentSearchLinearLayoutManager;
     private BottomSheetBehavior bottomSheetTrainFare;
     private LinearLayout rootLinearLayout;
     private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
     private ImageView backImage;
     private EditText searchEditText;
     TrainCode trainCode=new TrainCode();
-    private ArrayList<DataModel> originalList;
     private TextView from,to,fromCode,toCode,sourceStation,destinationStation;
     private TextView date,monthName,dayName;
     private ImageView flipImage,calenderImage;
     private MaterialButton button;
     private ConstraintLayout datePicker;
-    private static String top,bottom;
-    private  String fromOnTop="true";// fromOnTop is used to show wheather from is on top side or on botoom side
+    private String top,bottom;//top and bottom specify which is clicked source station or destination station
+    private String fromOnTop="true";// fromOnTop is used to show wheather from is on top side or on botoom side
     private FrameLayout recentSearchFrameLayout;
     private RecyclerView recentSearchRecyclerView;
     private TextView clear;
@@ -76,20 +73,12 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_fare);
-//        Slide enterTransition=new Slide();
-//        enterTransition.setSlideEdge(Gravity.LEFT);
-//        enterTransition.setDuration(0);
-//        enterTransition.setStartDelay(30);
-//        getWindow().setExitTransition(enterTransition);
         initilization();
         attachListener();
         originalList=trainCode.returnList();
         setBottomSheetCallbackForTrainFare();
         setTrainFareRecyclerView();
         setRecentSearchRecyclerView();
-
-
-
 
 
     }
@@ -99,7 +88,6 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         backImage=findViewById(R.id.back_button);
         searchEditText=findViewById(R.id.data_taker);
         rootLinearLayout=findViewById(R.id.search_view_root_layout);
@@ -113,6 +101,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         sourceStation=findViewById(R.id.source_station);
         destinationStation=findViewById(R.id.destination_station);
         flipImage=findViewById(R.id.flip);
+        flipImage.setVisibility(View.GONE);
         calenderImage=findViewById(R.id.calender);
         button=findViewById(R.id.button);
         datePicker=findViewById(R.id.date_picker);
@@ -124,6 +113,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         recentSearchRecyclerView=findViewById(R.id.recent_search_recycler_view);
         recentSearchLinearLayoutManager=new LinearLayoutManager(this);
         clear=findViewById(R.id.clear);
+        appBarLayout=findViewById(R.id.app_bar_layout);
         recentSearchText=findViewById(R.id.recent_search_text);
         recentSearchText.requestFocus();
     }
@@ -132,6 +122,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         bottomSheetTrainFare.setPeekHeight(3000);
         bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_EXPANDED);
         toolbar.animate().translationY(-toolbar.getHeight()).start();
+        appBarLayout.animate().translationY(-toolbar.getHeight()).start();
         recentSearchFrameLayout.setVisibility(View.VISIBLE);
         trainFareRecyclerView.setVisibility(View.GONE);
     }
@@ -168,10 +159,10 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
 
                 if(newState == BottomSheetBehavior.STATE_HIDDEN){
                     toolbar.animate().translationY(0f).start();
-                    searchEditText.setText("");
+                    appBarLayout.animate().translationY(0f).start();
+
 
                 } if(newState != BottomSheetBehavior.STATE_HIDDEN){
-                    searchEditText.setText("");
                     recentSearchText.requestFocus();
                     setRecentSearchRecyclerView();
 
@@ -212,15 +203,9 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
        if(view.getId()==R.id.back_button){
             bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
            toolbar.animate().translationY(0f).start();
+           appBarLayout.animate().translationY(0f).start();
         }
-        else if(view.getId()==R.id.source_station){
-           top="true";bottom="false";
-           openSearchView();
 
-        }else if(view.getId()==R.id.destination_station){
-           bottom="true";top="false";
-           openSearchView();
-        }
        else if(view.getId()==R.id.date_picker){
            showDatePicker();
        }
@@ -228,6 +213,20 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
            onButtonClicked();
            datePicker.setBackground(getResources().getDrawable(R.drawable.edit_no_dash));
 
+       }else if(view.getId()==R.id.flip){
+           flipToAndFrom();
+       }
+       else if(view.getId()==R.id.clear){
+
+           deleteRecentSearch();
+       }
+       else if(view.getId()==R.id.source_station){
+           top="true";bottom="false";
+           openSearchView();
+
+       }else if(view.getId()==R.id.destination_station){
+           bottom="true";top="false";
+           openSearchView();
        }
        else if(view.getId()==R.id.from|| view.getId()==R.id.from_code){
            top="true";bottom="false";
@@ -236,14 +235,7 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
        else if(view.getId()==R.id.to||view.getId()==R.id.to_code){
            bottom="true";top="false";
            openSearchView();
-       }else if(view.getId()==R.id.flip){
-           flipToAndFrom();
        }
-       else if(view.getId()==R.id.clear){
-
-           deleteRecentSearch();
-       }
-
 
     }
 
@@ -252,10 +244,12 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         if(bottomSheetTrainFare.getState()==BottomSheetBehavior.STATE_EXPANDED){
             bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
             toolbar.animate().translationY(0f).start();
+            appBarLayout.animate().translationY(0f).start();
             return;
         }if(bottomSheetTrainFare.getState()!=BottomSheetBehavior.STATE_HIDDEN){
             bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
             toolbar.animate().translationY(0f).start();
+            appBarLayout.animate().translationY(0f).start();
         }
         super.onBackPressed();
     }
@@ -271,77 +265,91 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         recentSearchFrameLayout.setVisibility(View.GONE);
         trainFareRecyclerView.setVisibility(View.VISIBLE);
-//        if(searchEditText.getText().toString().trim().length()==0){
-//            recentSearchFrameLayout.setVisibility(View.VISIBLE);
-//            recentSearchRecyclerView.setVisibility(View.VISIBLE);
-//            trainFareRecyclerView.setVisibility(View.GONE);
-//        }
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
 
-        ArrayList<DataModel> tempList;
         newList=new ArrayList<>();
-        tempList=originalList;
         String entry=searchEditText.getText().toString().toUpperCase().trim();
-        ArrayList<DataModel> list = new ArrayList<>();
-        for(int i=0;i<tempList.size();i++){
-            if(tempList.get(i).getStationName().contains(entry)){
-                newList.add(new DataModel(tempList.get(i).getStationName(),tempList.get(i).getStationCode()));
+        for(int i=0;i<originalList.size();i++){
+            if(originalList.get(i).getStationName().contains(entry)){
+                newList.add(new DataModel(originalList.get(i).getStationName(),originalList.get(i).getStationCode()));
             }
 
         }
-
+        if(newList.size()==0)return;
         adapter.updateList(newList);
         adapter.notifyDataSetChanged();
-
     }
-
-    private void showToast(String message){
-        Toast.makeText(this,message ,Toast.LENGTH_SHORT ).show();
-    }
-
+    //click listener of search item clicked on list
     @Override
     public void onSearchItemClicked(int position) {
 
-      if(clickedByTopOrBottom().equals("top")){
-          bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
-          from.setVisibility(View.VISIBLE);
-          fromCode.setVisibility(View.VISIBLE);
-          sourceStation.setVisibility(View.INVISIBLE);
-          from.setText(newList.get(position).getStationName());
-          fromCode.setText(newList.get(position).getStationCode());
+       try{
+           if(clickedByTopOrBottom().equals("top")){
+               bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
+               from.setVisibility(View.VISIBLE);
+               fromCode.setVisibility(View.VISIBLE);
+               sourceStation.setVisibility(View.INVISIBLE);
 
+               if(isNewList()) {
+                   from.setText(newList.get(position).getStationName());
+                   fromCode.setText(newList.get(position).getStationCode());
+                   searchEditText.setText("");
+               }else {
 
-      }else if(clickedByTopOrBottom().equals("bottom")){
-          bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
-          to.setVisibility(View.VISIBLE);
-          toCode.setVisibility(View.VISIBLE);
-          destinationStation.setVisibility(View.INVISIBLE);
-          to.setText(newList.get(position).getStationName());
-          toCode.setText(newList.get(position).getStationCode());
+                   from.setText(originalList.get(position).getStationName());
+                   fromCode.setText(originalList.get(position).getStationCode());
+                   searchEditText.setText("");
+               }
+               if(fromCode.getText().equals(toCode.getText())&&from.getText().equals(to.getText())){
+                   Snackbar.make(coordinatorLayout,"source and destination station can't be same" ,Snackbar.LENGTH_SHORT ).show();
+               }
+           }else if(clickedByTopOrBottom().equals("bottom")){
 
+               bottomSheetTrainFare.setState(BottomSheetBehavior.STATE_HIDDEN);
+               to.setVisibility(View.VISIBLE);
+               toCode.setVisibility(View.VISIBLE);
+               destinationStation.setVisibility(View.INVISIBLE);
 
-      }
-      else if(clickedByTopOrBottom().equals("null")){
-          Toast.makeText(this, "You haven't selected any station", Toast.LENGTH_SHORT).show();
-      }
+               if(isNewList()) {
+
+                   to.setText(newList.get(position).getStationName());
+                   toCode.setText(newList.get(position).getStationCode());
+                   searchEditText.setText("");
+               }else {
+                   to.setText(originalList.get(position).getStationName());
+                   toCode.setText(originalList.get(position).getStationCode());
+                   searchEditText.setText("");
+               }
+
+               if(fromCode.getText().equals(toCode.getText())&&from.getText().equals(to.getText())){
+                   Snackbar.make(coordinatorLayout,"source and destination station can't be same" ,Snackbar.LENGTH_INDEFINITE ).show();
+               }
+
+           }
+           else if(clickedByTopOrBottom().equals("null")){
+               Toast.makeText(this, "You haven't selected any station", Toast.LENGTH_SHORT).show();
+           }
+
+       }catch (IndexOutOfBoundsException e){
+           Log.i("TAG", "outOfBoundException :- "+e.getMessage());
+       }
+
+        if(!fromCode.getText().equals("null")&&!toCode.getText().equals("null")){
+            flipImage.setVisibility(View.VISIBLE);
+        }
 
 
     }
+
+
     private boolean isNewList(){
-        if(searchEditText.getText().toString().trim().length()==0)
-        return false;
-        else
-            return true;
+        if(searchEditText.getText().toString().trim().length()==0) return false;
+        else return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 
     private String clickedByTopOrBottom(){
         if(top.equals("true"))
@@ -351,6 +359,9 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
        else
         return "null";
     }
+
+
+
     private void showDatePicker(){
        final int pyear,month,day;
             final Calendar calendar = Calendar.getInstance();
@@ -390,7 +401,6 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
             datePickerDialog.show();
 
         }
-
         private String returnMonthName(int position){
 
         String [] monthName=new String[]{
@@ -400,7 +410,6 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         return monthName[position];
 
     }
-
     private boolean validateYear(int presentYear,int selectedYear){
 
         return true;
@@ -470,12 +479,17 @@ public class TrainFareActivity extends AppCompatActivity implements View.OnClick
         helper.deleteRecentSearches();
         recentSearchList.clear();
         recentSearchAdapter.notifyDataSetChanged();
-        int animId=R.anim.layout_animation_left_to_right;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, animId);
-        recentSearchRecyclerView.setLayoutAnimation(animation);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
+    private void showToast(String message){
+        Toast.makeText(this,message ,Toast.LENGTH_SHORT ).show();
+    }
 
 }
 

@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_sheet"
-    android:layout_height="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_peekHeight="0dp"
-    app:behavior_hideable="true"
-    android:background="#fff"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="wrap_content">
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_title"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#ffffff"
             android:elevation="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="Live Train Status">
+            app:title="Live Train Status"
+            >
 
         </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/root_layout"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -35,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:focusableInTouchMode="true"
             android:hint="Enter Train No."
@@ -43,28 +46,26 @@
             app:boxCornerRadiusBottomStart="5dp"
             app:boxCornerRadiusTopEnd="5dp"
             app:boxCornerRadiusTopStart="5dp"
-            app:counterEnabled="true"
             app:boxStrokeColor="#788365"
-            app:hintTextColor="#788365"
-            app:counterMaxLength="10"
+            app:boxStrokeWidth="1dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="5"
             app:hintAnimationEnabled="true"
             app:hintEnabled="true"
-            app:boxStrokeWidth="1dp"
             app:hintTextAppearance="?android:textAppearanceSmall"
+            app:hintTextColor="#788365"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_title">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.shubham.srikanth.kishan.Listener.CustomEditText
                 android:id="@+id/train_no_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="true"
-                android:drawableRight="@drawable/ic_microphone_of_voice"
                 android:focusableInTouchMode="true"
                 android:imeOptions="actionDone"
                 android:inputType="number"
-                android:maxLength="5"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,227 +86,315 @@
 
         </TextView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="wrap_content"
+
+        <HorizontalScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_corner"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout4"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout1"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout1">
-
-
-            <TextView
-                android:id="@+id/yesterday_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:gravity="center"
-                android:text="05"
-                android:clickable="false"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toStartOf="@+id/yesterday_month_text"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/yesterday_text" />
-
-            <TextView
-                android:id="@+id/yesterday_month_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dec"
-                android:textSize="10sp"
-                android:clickable="false"
-                android:paddingBottom="5dp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/yesterday_date_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/yesterday_date_text" />
-
-            <TextView
-                android:id="@+id/yesterday_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="5"
-                android:gravity="center"
-                android:text="Yesterday"
-                android:paddingTop="5dp"
-                android:clickable="false"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/edit_corner"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout4">
-
-
-            <TextView
-                android:id="@+id/tommorow_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:gravity="center"
-                android:text="05"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toStartOf="@+id/tommorow_month_text"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tommorow_text" />
-
-            <TextView
-                android:id="@+id/tommorow_month_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="Dec"
-                android:textSize="10sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tommorow_date_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tommorow_date_text" />
-
-            <TextView
-                android:id="@+id/tommorow_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="5"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="Tommorow"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="48dp"
-            android:background="@drawable/edit_corner"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:scrollbars="none"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/train_no_input_layout">
-
-
-            <TextView
-                android:id="@+id/day_date_text"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:gravity="center"
-                android:text="05"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toStartOf="@+id/day_month_text"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/day_text" />
-
-            <TextView
-                android:id="@+id/day_month_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="Dec"
-                android:textSize="10sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/day_date_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/day_date_text" />
-
-            <TextView
-                android:id="@+id/day_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="5"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="Wednesday"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_corner"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout">
+                android:gravity="center">
 
 
-            <TextView
-                android:id="@+id/today_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:gravity="center"
-                android:text="05"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toStartOf="@+id/today_month_text"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/today_text" />
+                <androidx.constraintlayout.widget.ConstraintLayout
 
-            <TextView
-                android:id="@+id/today_month_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dec"
-                android:textSize="10sp"
-                android:paddingBottom="5dp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/today_date_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/today_date_text" />
+                    android:id="@+id/three_day_ago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/edit_corner"
+                    android:clickable="true"
+                    android:elevation="0dp"
+                    android:focusable="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/today_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="5"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="Today"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/threedays_ago_date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:clickable="false"
+                        android:gravity="center"
+                        android:text="05"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toStartOf="@+id/threedays_ago_month_text"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/threedays_ago_text" />
+
+                    <TextView
+                        android:id="@+id/threedays_ago_month_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:paddingBottom="5dp"
+                        android:text="Dec"
+                        android:textSize="10sp"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/threedays_ago_date_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/threedays_ago_date_text" />
+
+                    <TextView
+                        android:id="@+id/threedays_ago_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:ems="5"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:text="3 Days Ago"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/two_day_ago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/edit_corner"
+                    android:clickable="true"
+                    android:elevation="0dp"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/today"
+                    app:layout_constraintStart_toEndOf="@+id/today"
+                    app:layout_constraintTop_toTopOf="@+id/to">
+
+
+                    <TextView
+                        android:id="@+id/twodays_ago_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:clickable="false"
+                        android:gravity="center"
+                        android:text="05"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toStartOf="@+id/twodays_ago_month_text"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/twodays_ago__text" />
+
+                    <TextView
+                        android:id="@+id/twodays_ago_month_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:paddingBottom="5dp"
+                        android:text="Dec"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/twodays_ago_date"
+                        app:layout_constraintTop_toBottomOf="@+id/twodays_ago__text" />
+
+                    <TextView
+                        android:id="@+id/twodays_ago__text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:ems="5"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:text="2 Days Ago"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/yesterday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/edit_corner"
+                    android:clickable="true"
+                    android:elevation="0dp"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/tommorow"
+                    app:layout_constraintStart_toEndOf="@+id/tommorow"
+                    app:layout_constraintTop_toTopOf="@+id/tommorow">
+
+
+                    <TextView
+                        android:id="@+id/yesterday_date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:gravity="center"
+                        android:text="05"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toStartOf="@+id/yesterday_month_text"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/yesterday_text" />
+
+                    <TextView
+                        android:id="@+id/yesterday_month_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:text="Dec"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/yesterday_date_text"
+                        app:layout_constraintTop_toBottomOf="@+id/yesterday_text" />
+
+                    <TextView
+                        android:id="@+id/yesterday_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="5"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:text="Yesterday"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/edit_corner"
+                    android:clickable="true"
+                    android:elevation="0dp"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/three_day_ago"
+                    app:layout_constraintStart_toEndOf="@+id/three_day_ago"
+                    app:layout_constraintTop_toTopOf="@+id/three_day_ago">
+
+
+                    <TextView
+                        android:id="@+id/today_date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="6dp"
+                        android:gravity="center"
+                        android:text="05"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/today_month_text"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/today_day_text" />
+
+                    <TextView
+                        android:id="@+id/today_month_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:text="Dec"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/today_date_text"
+                        app:layout_constraintTop_toBottomOf="@+id/today_day_text" />
+
+                    <TextView
+                        android:id="@+id/today_day_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="5"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:text="Today"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/tommorow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/edit_corner"
+                    android:clickable="true"
+                    android:elevation="0dp"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/two_day_ago"
+                    app:layout_constraintStart_toEndOf="@+id/two_day_ago"
+                    app:layout_constraintTop_toTopOf="@+id/two_day_ago"
+                    app:layout_constraintVertical_bias="0.0">
+
+
+                    <TextView
+                        android:id="@+id/tommorow_date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:gravity="center"
+                        android:text="05"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tommorow_month_text"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tommorow_text" />
+
+                    <TextView
+                        android:id="@+id/tommorow_month_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:text="Dec"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tommorow_date_text"
+                        app:layout_constraintTop_toBottomOf="@+id/tommorow_text" />
+
+                    <TextView
+                        android:id="@+id/tommorow_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="5"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:text="Tommorow"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
 
         <com.google.android.material.button.MaterialButton
@@ -319,15 +408,15 @@
             android:elevation="5dp"
             android:text="Search Live Location"
             android:textAllCaps="false"
+            android:textColor="#fff"
             android:textSize="15sp"
             app:cornerRadius="8dp"
-            android:textColor="#fff"
-            app:rippleColor="#fff"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.433"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
+            app:rippleColor="#fff" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

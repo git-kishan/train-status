@@ -22,7 +22,7 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
         stationCode=itemView.findViewById(R.id.station_code);
         stationName=itemView.findViewById(R.id.station_name);
         cardView=itemView.findViewById(R.id.card_View_root);
-        cardView.setOnClickListener(new View.OnClickListener() {
+        itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onSearchItemClicked(getAdapterPosition());

@@ -34,6 +34,15 @@ public class EditTextFocusChangeListener implements View.OnFocusChangeListener {
                 Log.i("TAG","NullPointerException :- "+nullPointerException.getMessage() );
             }
         }
+        else if((view.getId()==R.id.pnr_edit_text)||(view.getId()==R.id.train_no_edit_text) && !b){
+
+            try {
+                if(inputMethodManager!=null)
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }catch (NullPointerException nullPointerException){
+                Log.i("TAG","NullPointerException :- "+nullPointerException.getMessage() );
+            }
+        }
 
 
     }

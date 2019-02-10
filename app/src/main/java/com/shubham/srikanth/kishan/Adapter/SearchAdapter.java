@@ -38,7 +38,6 @@ public class SearchAdapter extends RecyclerView.Adapter {
             ((SearchViewHolder) holder).stationName.setText(dataList.get(position).getStationName());
             ((SearchViewHolder) holder).stationCode.setText( dataList.get(position).getStationCode());
 
-            String stationName=dataList.get(position).getStationName();
         }
     }
 
